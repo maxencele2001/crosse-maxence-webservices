@@ -25,15 +25,19 @@ const exposeServices = {
             throw new Error(error)
         }
     },
-    findRecentsProjects: async (limitQuery)=>{
-        const {limit} = queryBuilder.extractLimit(limitQuery);
+    findRecentsProjects: async (query)=>{
+        const {limit} = queryBuilder.extractLimit(query);
         const {sort} = queryBuilder.extractSort('-createdAt');
-        console.log(sort);
         const options = {
             limit, sort
         }
+        // ? ca ecrit bien limit 2 en vardump mais par contre ca en affiche plus que 2 alors que c'est le meme code que au dessus
+        const {
+            filter,
+            projection,
+        } = queryBuilder.getFindOptions({query})
         try {
-            const   allProjects = await Project.find(null,null,options)
+            const   allProjects = await Project.find(filter,projection,options)
             return  allProjects
         } catch (error) {
             throw new Error(error)
